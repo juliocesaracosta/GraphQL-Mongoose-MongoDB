@@ -16,20 +16,19 @@ const server = new ApolloServer({
   }),
 });
 
-server
-.listen({port: process.env.PORT || 4000})
-.then(({url}) => {
-    console.log(`corriendo ${url}`)
-    mongoose
-      .connect(MONGO_URI)
-      .then(() => {
-        console.log(`Db Connected`);
-      })
-      .catch(err => {
-        console.log(err);
-        console.log(err.message);
-      });
+mongoose
+.connect(MONGO_URI)
+.then(() => {
+  console.log(`db connected`);
+  return server.listen({port: process.env.PORT || 4000})
 })
+.then((res)=> {
+  console.log(`Server is running on port ${res.url}`);
+})
+.catch(err => {
+  console.log(err.message);
+});
+
 
 
 //const handler = startServerAndCreateNextHandler(server, {
