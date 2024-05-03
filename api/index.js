@@ -19,7 +19,6 @@ mongoose
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async (req, res) => ({ req, res }),
   cache: new InMemoryLRUCache({
     // ~100MiB
     maxSize: Math.pow(2, 20) * 100,
