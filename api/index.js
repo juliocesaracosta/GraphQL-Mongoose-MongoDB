@@ -9,29 +9,29 @@ mongoose
   .connect(MONGO_URI)
   .then(() => {
     console.log(`Db Connected`);
+    const server = new ApolloServer({
+      typeDefs,
+      resolvers,
+      context: async (req, res) => ({ req, res }),
+      cache: new InMemoryLRUCache({
+        // ~100MiB
+        maxSize: Math.pow(2, 20) * 100,
+        // 5 minutes (in seconds)
+        ttl: 300,
+      }),
+    });
+    
+    server
+    .listen({port: process.env.PORT || 4000})
+    .then(({url}) => {
+        console.log(`corriendo ${url}`)
+    })
   })
   .catch(err => {
     console.log(err);
     console.log(err.message);
   });
 
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  cache: new InMemoryLRUCache({
-    // ~100MiB
-    maxSize: Math.pow(2, 20) * 100,
-    // 5 minutes (in seconds)
-    ttl: 300,
-  }),
-});
-
-server
-.listen({port: process.env.PORT || 4000})
-.then(({url}) => {
-    console.log(`corriendo ${url}`)
-})
 
 //const handler = startServerAndCreateNextHandler(server, {
 //  context: async (req, res) => ({ req, res }),
